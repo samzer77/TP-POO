@@ -30,6 +30,9 @@ public class Main {
         // TEST 7.4
         System.out.println("\n===== TEST 7.4 : RETOUR DANS UNE STATION PLEINE =====");
         testRetourStationPleine();
+
+         System.out.println("\n===== TEST avant de commencer TP2 ");
+        testFinalTP_1();
     }
 
 
@@ -194,5 +197,53 @@ public class Main {
         System.out.println("Vélo disponible : " + bike1.isAvailable());
         System.out.println("B-104 présent à Arrivée : " + arrivee.containsBike(bike1));
         System.out.println("Station Arrivée pleine : " + arrivee.isFull());
+    }
+
+     public static void testFinalTP_1() {
+        // 1. Création des stations
+        Station campus = new Station("Campus Nord", 10);
+        Station bibliotheque = new Station("Bibliothèque", 10);
+
+        // 2. Création de l'utilisateur
+        User alice = new User("U01", "Alice");
+
+        // 3. Création du vélo classique
+        Bike bike = new Bike("B-104");
+
+        // 4. Ajouter le vélo à Campus Nord
+        campus.addBike(bike);
+
+        MobilityService service = new MobilityService();
+
+        DateTimeFormatter format =
+                DateTimeFormatter.ofPattern("HH:mm");
+
+        LocalDateTime start = LocalDateTime.now();
+        LocalDateTime end = start.plusHours(2);
+
+        System.out.println("===== AVANT EMPRUNT =====");
+        System.out.println("Vélo disponible : " + bike.isAvailable());
+        System.out.println("Vélo à Campus Nord : " + campus.containsBike(bike));
+
+        // 5. Alice emprunte le vélo
+        Rental rental = service.rentBike(
+                alice, bike, campus, start
+        );
+
+        System.out.println("\n===== APRES EMPRUNT =====");
+        System.out.println("Alice emprunte B-104 à " + start.format(format));
+        System.out.println("Vélo disponible : " + bike.isAvailable());
+        System.out.println("Vélo à Campus Nord : " + campus.containsBike(bike));
+        System.out.println("Location active : " + rental.isActive());
+
+        // 6. Alice restitue le vélo à Bibliothèque
+        service.returnBike(rental, bibliotheque, end);
+
+        System.out.println("\n===== APRES RESTITUTION =====");
+        System.out.println("Alice restitue B-104 à " + end.format(format));
+        System.out.println("Location active : " + rental.isActive());
+        System.out.println("Vélo disponible : " + bike.isAvailable());
+        System.out.println("Vélo à Bibliothèque : " + bibliotheque.containsBike(bike));
+        System.out.println("Vélo à Campus Nord : " + campus.containsBike(bike));
     }
 }
